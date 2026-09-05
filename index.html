@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phonological Rule Editor — 音韻規則エディタ</title>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/swiss-theme.css">
+  <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Top Bar / Structured Swiss Header -->
+    <header class="swiss-header">
+      <!-- Tier 1: App Masthead & Global Utility -->
+      <div class="header-masthead">
+        <div class="brand">
+          <span class="brand-title">PHONOLOGICAL RULE EDITOR</span>
+          <span class="brand-subtitle">音韻規則・音変化エディタ</span>
+        </div>
+        <div class="masthead-util">
+          <button type="button" id="btn-show-help" class="swiss-btn swiss-btn-help" title="操作説明 [ ? ]">HELP [?]</button>
+        </div>
+      </div>
+
+      <!-- Tier 2: Workflow & Action Toolbar -->
+      <div class="header-toolbar">
+        <div class="toolbar-left">
+          <!-- Preset Dropdown -->
+          <div class="control-group">
+            <label for="preset-select" class="control-label">PRESET</label>
+            <select id="preset-select" class="swiss-select">
+              <option value="">カスタム (新規作成)</option>
+            </select>
+          </div>
+
+          <!-- Arrow Mode Toggle (→ vs >) -->
+          <div class="control-group">
+            <label class="control-label">OPERATOR</label>
+            <div class="toggle-group" id="operator-toggle" role="group" aria-label="記号切り替え">
+              <button type="button" class="toggle-btn active" data-op="arrow" title="共時的音韻規則 (→)">→</button>
+              <button type="button" class="toggle-btn" data-op="greater" title="通時的音変化 (>)">&gt;</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbar-right">
+          <!-- Export Actions -->
+          <div class="control-group">
+            <label class="control-label">EXPORT</label>
+            <div class="btn-group">
+              <button id="btn-copy-png" class="swiss-btn" title="高解像度PNG画像をクリップボードにコピー">
+                <svg class="btn-svg-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M3.5 10.5h-1a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v1"/></svg>
+                <span>PNG コピー</span>
+              </button>
+              <button id="btn-download-png" class="swiss-btn" title="高解像度PNG画像をダウンロード">
+                <svg class="btn-svg-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2v8.5m0 0l-3-3m3 3l3-3M2.5 13.5h11"/></svg>
+                <span>PNG 保存</span>
+              </button>
+              <button id="btn-download-svg" class="swiss-btn" title="ベクターSVG画像をダウンロード">
+                <svg class="btn-svg-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2v8.5m0 0l-3-3m3 3l3-3M2.5 13.5h11"/></svg>
+                <span>SVG 保存</span>
+              </button>
+              <button id="btn-copy-katex" class="swiss-btn swiss-btn-primary" title="LaTeX / KaTeX コードをコピー">
+                <svg class="btn-svg-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4l4 4-4 4m6 0h4"/></svg>
+                <span>KaTeX コピー</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <main class="main-stage">
+      
+      <!-- Section 1: Prominent Bi-directional Text Notation (Top Position) -->
+      <section class="notation-prominent-section">
+        <div class="section-label-bar">
+          <div class="label-with-badge">
+            <span class="section-tag">TEXT NOTATION (BIDIRECTIONAL)</span>
+            <span class="section-badge">リアルタイム双方向同期</span>
+          </div>
+          <div class="notation-actions">
+            <span class="syntax-guide-pill">例: <code>[+syl] -> [+nas] / _ [+nas]</code> または <code>*p > f / # _</code></span>
+            <button id="btn-toggle-katex-code" class="mini-text-btn" title="KaTeXコード表示切替">KaTeX コード表示</button>
+          </div>
+        </div>
+
+        <div class="prominent-input-row">
+          <input type="text" id="raw-notation-input" class="swiss-text-input-prominent" 
+                 placeholder="音韻規則を入力 (例: [+syl] -> [+nas] / _ [+nas] または *p > f / # _)" 
+                 spellcheck="false" autocomplete="off">
+        </div>
+
+        <!-- Collapsible KaTeX Code Box -->
+        <div class="katex-drawer" id="katex-drawer">
+          <div class="drawer-header">
+            <span class="drawer-tag">GENERATED KATEX / LATEX CODE</span>
+            <button id="btn-copy-katex-inline" class="mini-text-btn" title="コードをコピー">COPY CODE</button>
+          </div>
+          <textarea id="katex-code-output" class="swiss-code-area" readonly spellcheck="false"></textarea>
+        </div>
+      </section>
+
+      <!-- Section 2: Side-by-Side Grid (Preview Left, Rule Slots Right) -->
+      <section class="workspace-split-grid">
+        
+        <!-- Left: Live Typography Display (KaTeX preview) -->
+        <div class="split-col display-col">
+          <div class="section-label-bar">
+            <span class="section-tag">PREVIEW (LIVE)</span>
+            <div class="preview-actions">
+              <!-- Font Switch Toggle: 明朝 / ゴシック -->
+              <div class="toggle-group font-toggle-group" id="font-toggle" role="group" aria-label="フォント切り替え">
+                <button type="button" class="toggle-btn active" data-font="serif" title="ローマン / 明朝体 (論文・LaTeX調)">明朝</button>
+                <button type="button" class="toggle-btn" data-font="sans" title="サンセリフ / ゴシック体 (スライド・スイス調)">ゴシック</button>
+              </div>
+              <div class="zoom-group">
+                <button id="btn-zoom-out" class="icon-btn" title="縮小">－</button>
+                <button id="btn-zoom-reset" class="icon-btn" title="リセット">100%</button>
+                <button id="btn-zoom-in" class="icon-btn" title="拡大">＋</button>
+              </div>
+            </div>
+          </div>
+          <div class="preview-canvas-wrapper" id="canvas-wrapper">
+            <div class="katex-render-target font-serif" id="katex-display">
+              <!-- KaTeX renders here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Interactive Rule Slots GUI -->
+        <div class="split-col slots-col">
+          <div class="section-label-bar">
+            <span class="section-tag">RULE SLOTS (ACTIVE: <span id="active-slot-name">A</span>)</span>
+            <span class="slots-help-badge">直接タイピング または 下のパレットで入力</span>
+          </div>
+
+          <div class="slots-container" id="slots-container">
+            <!-- Slot A: Target -->
+            <div class="slot-card active" data-slot="target" id="slot-target">
+              <div class="slot-header">
+                <span class="slot-name" title="標的音 (Target)">A</span>
+                <div class="slot-actions">
+                  <button type="button" class="mini-btn add-matrix-btn" title="素性行列 [ ± ] を追加">[ ± ]</button>
+                  <button type="button" class="mini-btn clear-slot-btn" title="クリア">×</button>
+                </div>
+              </div>
+              <div class="slot-body" id="slot-body-target"></div>
+            </div>
+
+            <!-- Operator Indicator (→ or >) -->
+            <div class="slot-operator" id="operator-display" title="クリックで矢印 (→) と音変化 (>) を切り替え">
+              <span class="operator-symbol">→</span>
+            </div>
+
+            <!-- Slot B: Change / Output -->
+            <div class="slot-card" data-slot="change" id="slot-change">
+              <div class="slot-header">
+                <span class="slot-name" title="変化後 (Change)">B</span>
+                <div class="slot-actions">
+                  <button type="button" class="mini-btn add-matrix-btn" title="素性行列 [ ± ] を追加">[ ± ]</button>
+                  <button type="button" class="mini-btn clear-slot-btn" title="クリア">×</button>
+                </div>
+              </div>
+              <div class="slot-body" id="slot-body-change"></div>
+            </div>
+
+            <!-- Environment Slash -->
+            <div class="slot-slash">/</div>
+
+            <!-- Slot C: Left Context -->
+            <div class="slot-card" data-slot="contextLeft" id="slot-contextLeft">
+              <div class="slot-header">
+                <span class="slot-name" title="先行環境 (Left Context)">C</span>
+                <div class="slot-actions">
+                  <button type="button" class="mini-btn add-matrix-btn" title="素性行列 [ ± ] を追加">[ ± ]</button>
+                  <button type="button" class="mini-btn clear-slot-btn" title="クリア">×</button>
+                </div>
+              </div>
+              <div class="slot-body" id="slot-body-contextLeft"></div>
+            </div>
+
+            <!-- Condition Underline / Focus Position -->
+            <div class="slot-underline" title="標的音の生起位置 (環境下線)">__</div>
+
+            <!-- Slot D: Right Context -->
+            <div class="slot-card" data-slot="contextRight" id="slot-contextRight">
+              <div class="slot-header">
+                <span class="slot-name" title="後続環境 (Right Context)">D</span>
+                <div class="slot-actions">
+                  <button type="button" class="mini-btn add-matrix-btn" title="素性行列 [ ± ] を追加">[ ± ]</button>
+                  <button type="button" class="mini-btn clear-slot-btn" title="クリア">×</button>
+                </div>
+              </div>
+              <div class="slot-body" id="slot-body-contextRight"></div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Section 3: Comprehensive Quick Insertion Palette & Custom Feature Maker -->
+      <section class="palette-section">
+        <div class="section-label-bar">
+          <span class="section-tag">QUICK PALETTE (CLICK TO INSERT INTO ACTIVE SLOT)</span>
+          <span class="palette-hint">ワンクリックで選択中のスロットへ即座に挿入されます</span>
+        </div>
+
+        <div class="palette-groups">
+          
+          <!-- Custom Feature Creator (User-defined features) -->
+          <div class="palette-group custom-feature-group">
+            <span class="palette-group-title">カスタム素性作成</span>
+            <div class="custom-feature-maker">
+              <div class="custom-val-toggle" id="custom-val-toggle">
+                <button type="button" class="toggle-btn active" data-val="+">+</button>
+                <button type="button" class="toggle-btn" data-val="-">-</button>
+                <button type="button" class="toggle-btn" data-val="±">±</button>
+                <button type="button" class="toggle-btn" data-val="α">α</button>
+                <button type="button" class="toggle-btn" data-val="β">β</button>
+              </div>
+              <input type="text" id="custom-feature-input" class="custom-feature-input" placeholder="任意の素性名を入力 (例: fortis, slack vc, CG)" spellcheck="false">
+              <button type="button" id="btn-add-custom-feature" class="swiss-btn swiss-btn-primary">+ 素性を追加</button>
+            </div>
+            <div class="chip-container" id="chips-custom">
+              <!-- Dynamically added user custom features appear here -->
+            </div>
+          </div>
+
+          <!-- Frequently Used Phonemes -->
+          <div class="palette-group">
+            <span class="palette-group-title">よく使う音素</span>
+            <div class="chip-container" id="chips-phonemes">
+              <button class="chip chip-phoneme" data-insert="p">p</button>
+              <button class="chip chip-phoneme" data-insert="t">t</button>
+              <button class="chip chip-phoneme" data-insert="k">k</button>
+              <button class="chip chip-phoneme" data-insert="b">b</button>
+              <button class="chip chip-phoneme" data-insert="d">d</button>
+              <button class="chip chip-phoneme" data-insert="g">g</button>
+              <button class="chip chip-phoneme" data-insert="s">s</button>
+              <button class="chip chip-phoneme" data-insert="z">z</button>
+              <button class="chip chip-phoneme" data-insert="m">m</button>
+              <button class="chip chip-phoneme" data-insert="n">n</button>
+              <button class="chip chip-phoneme" data-insert="ŋ">ŋ</button>
+              <button class="chip chip-phoneme" data-insert="l">l</button>
+              <button class="chip chip-phoneme" data-insert="r">r</button>
+              <button class="chip chip-phoneme" data-insert="w">w</button>
+              <button class="chip chip-phoneme" data-insert="j">j</button>
+              <button class="chip chip-phoneme" data-insert="i">i</button>
+              <button class="chip chip-phoneme" data-insert="e">e</button>
+              <button class="chip chip-phoneme" data-insert="a">a</button>
+              <button class="chip chip-phoneme" data-insert="o">o</button>
+              <button class="chip chip-phoneme" data-insert="u">u</button>
+            </div>
+          </div>
+
+          <!-- Linguistic Symbols & Boundaries -->
+          <div class="palette-group">
+            <span class="palette-group-title">記号・境界</span>
+            <div class="chip-container" id="chips-symbols">
+              <button class="chip chip-symbol" data-insert="∅" title="脱落 (Null / ゼロ)">∅</button>
+              <button class="chip chip-symbol" data-insert="#" title="語境界 (Word Boundary)">#</button>
+              <button class="chip chip-symbol" data-insert="$" title="音節境界 (Syllable Boundary)">$</button>
+              <button class="chip chip-symbol" data-insert="*" title="再建記号 (Reconstructed)">*</button>
+              <button class="chip chip-symbol" data-insert="C" title="任意の子音">C</button>
+              <button class="chip chip-symbol" data-insert="V" title="任意の母音">V</button>
+              <button class="chip chip-symbol" data-insert="ɾ" title="弾音 (Flap)">ɾ</button>
+              <button class="chip chip-symbol" data-insert="ʔ" title="声門閉鎖音">ʔ</button>
+              <button class="chip chip-symbol" data-insert="ʲ" title="口蓋化記号">ʲ</button>
+              <button class="chip chip-symbol" data-insert="ː" title="長音記号">ː</button>
+            </div>
+          </div>
+
+          <!-- Major Class Features -->
+          <div class="palette-group">
+            <span class="palette-group-title">主要クラス素性</span>
+            <div class="chip-container">
+              <button class="chip chip-feature" data-insert="+syllabic">+syl</button>
+              <button class="chip chip-feature" data-insert="-syllabic">-syl</button>
+              <button class="chip chip-feature" data-insert="+consonantal">+cons</button>
+              <button class="chip chip-feature" data-insert="-consonantal">-cons</button>
+              <button class="chip chip-feature" data-insert="+sonorant">+son</button>
+              <button class="chip chip-feature" data-insert="-sonorant">-son</button>
+              <button class="chip chip-feature" data-insert="+approximant">+approx</button>
+              <button class="chip chip-feature" data-insert="-approximant">-approx</button>
+            </div>
+          </div>
+
+          <!-- Laryngeal Features -->
+          <div class="palette-group">
+            <span class="palette-group-title">喉頭素性</span>
+            <div class="chip-container">
+              <button class="chip chip-feature" data-insert="+voice">+voice</button>
+              <button class="chip chip-feature" data-insert="-voice">-voice</button>
+              <button class="chip chip-feature" data-insert="+spread gl">+spread gl</button>
+              <button class="chip chip-feature" data-insert="-spread gl">-spread gl</button>
+              <button class="chip chip-feature" data-insert="+constricted gl">+constr gl</button>
+              <button class="chip chip-feature" data-insert="-constricted gl">-constr gl</button>
+            </div>
+          </div>
+
+          <!-- Manner Features -->
+          <div class="palette-group">
+            <span class="palette-group-title">調音様式素性</span>
+            <div class="chip-container">
+              <button class="chip chip-feature" data-insert="+continuant">+cont</button>
+              <button class="chip chip-feature" data-insert="-continuant">-cont</button>
+              <button class="chip chip-feature" data-insert="+delayed release">+del rel</button>
+              <button class="chip chip-feature" data-insert="-delayed release">-del rel</button>
+              <button class="chip chip-feature" data-insert="+nasal">+nasal</button>
+              <button class="chip chip-feature" data-insert="-nasal">-nasal</button>
+              <button class="chip chip-feature" data-insert="+lateral">+lat</button>
+              <button class="chip chip-feature" data-insert="-lateral">-lat</button>
+              <button class="chip chip-feature" data-insert="+strident">+strid</button>
+              <button class="chip chip-feature" data-insert="-strident">-strid</button>
+            </div>
+          </div>
+
+          <!-- Place - Coronal Features -->
+          <div class="palette-group">
+            <span class="palette-group-title">舌頂音 (Coronal)</span>
+            <div class="chip-container">
+              <button class="chip chip-feature" data-insert="+coronal">+cor</button>
+              <button class="chip chip-feature" data-insert="-coronal">-cor</button>
+              <button class="chip chip-feature" data-insert="+anterior">+ant</button>
+              <button class="chip chip-feature" data-insert="-anterior">-ant</button>
+              <button class="chip chip-feature" data-insert="+distributed">+distr</button>
+              <button class="chip chip-feature" data-insert="-distributed">-distr</button>
+            </div>
+          </div>
+
+          <!-- Place - Dorsal & Vowel Features -->
+          <div class="palette-group">
+            <span class="palette-group-title">舌背・母音素性</span>
+            <div class="chip-container">
+              <button class="chip chip-feature" data-insert="+high">+high</button>
+              <button class="chip chip-feature" data-insert="-high">-high</button>
+              <button class="chip chip-feature" data-insert="+low">+low</button>
+              <button class="chip chip-feature" data-insert="-low">-low</button>
+              <button class="chip chip-feature" data-insert="+back">+back</button>
+              <button class="chip chip-feature" data-insert="-back">-back</button>
+              <button class="chip chip-feature" data-insert="+tense">+tense</button>
+              <button class="chip chip-feature" data-insert="-tense">-tense</button>
+              <button class="chip chip-feature" data-insert="+ATR">+ATR</button>
+              <button class="chip chip-feature" data-insert="-ATR">-ATR</button>
+            </div>
+          </div>
+
+          <!-- Place - Labial Features -->
+          <div class="palette-group">
+            <span class="palette-group-title">唇音 (Labial)</span>
+            <div class="chip-container">
+              <button class="chip chip-feature" data-insert="+labial">+labial</button>
+              <button class="chip chip-feature" data-insert="-labial">-labial</button>
+              <button class="chip chip-feature" data-insert="+round">+round</button>
+              <button class="chip chip-feature" data-insert="-round">-round</button>
+            </div>
+          </div>
+
+          <!-- Prosodic Features -->
+          <div class="palette-group">
+            <span class="palette-group-title">超分節・韻律素性</span>
+            <div class="chip-container">
+              <button class="chip chip-feature" data-insert="+stress">+stress</button>
+              <button class="chip chip-feature" data-insert="-stress">-stress</button>
+              <button class="chip chip-feature" data-insert="+long">+long</button>
+              <button class="chip chip-feature" data-insert="-long">-long</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Minimal Swiss Toast Notification -->
+    <div id="toast" class="swiss-toast" aria-live="polite"></div>
+
+    <!-- Operating Instructions Modal (Help) -->
+    <div id="help-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span id="help-title" class="modal-title">操作説明 [ ? ]</span>
+          <button type="button" class="modal-close" id="btn-close-help" aria-label="閉じる">&times;</button>
+        </div>
+        <div class="modal-body">
+          <h4>記法</h4>
+          <ul>
+            <li><strong>音変化</strong>: <code>A -&gt; B / C _ D</code></li>
+            <li><strong>通時的変化</strong>: <code>A &gt; B / C _ D</code>（再建形: <code>*p &gt; b</code>）</li>
+            <li><strong>素性行列</strong>: <code>[+voice, -cont]</code>（カンマまたは空白区切り）</li>
+            <li><strong>音素・記号</strong>: <code>k</code>, <code>p</code>, <code>∅</code>（脱落/0）, <code>#</code>（語境界）, <code>$</code>（音節境界）</li>
+            <li><strong>環境省略</strong>: 文脈自由規則は <code>/</code> 以降を省略（例: <code>A -&gt; B</code>）</li>
+          </ul>
+
+          <h4>操作</h4>
+          <ul>
+            <li><strong>スロット編集</strong>: スロットをクリックして音素を直接入力、または下のパレットから素性を追加。</li>
+            <li><strong>記号切り替え</strong>: ヘッダーまたはスロット間の記号をクリックして <code>→</code> と <code>&gt;</code> を切り替え。</li>
+            <li><strong>フォント切り替え</strong>: プレビュー枠の「明朝 / ゴシック」で出力フォントを変更。</li>
+            <li><strong>カスタム素性</strong>: パレットの入力欄から任意の素性名を追加。</li>
+            <li><strong>エクスポート</strong>:
+              <ul>
+                <li><code>PNG コピー</code>: クリップボードに画像を格納。</li>
+                <li><code>PNG / SVG</code>: 画像ファイルを保存。</li>
+                <li><code>KaTeX コピー</code>: LaTeX数式コードを格納。</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>ショートカット</h4>
+          <ul>
+            <li><kbd>?</kbd> : 操作説明の開閉</li>
+            <li><kbd>Esc</kbd> : 操作説明を閉じる</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- App Scripts -->
+  <script src="js/parser.js"></script>
+  <script src="js/katex-generator.js"></script>
+  <script src="js/svg-rule-renderer.js"></script>
+  <script src="js/presets.js"></script>
+  <script src="js/exporter.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
