@@ -443,3 +443,40 @@ body {
   border: 1px solid var(--swiss-border);
   color: var(--swiss-black);
 }
+
+.modal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--swiss-black) !important;
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 5px 12px;
+  background: var(--swiss-surface);
+  border: 1px solid var(--swiss-border);
+  border-radius: 0;
+  transition: background-color 0.1s ease, color 0.1s ease, border-color 0.1s ease;
+}
+
+.modal-link:hover {
+  background: var(--swiss-black);
+  color: var(--swiss-white) !important;
+  border-color: var(--swiss-black);
+}
+
+.modal-link:hover .modal-link-icon {
+  fill: var(--swiss-white);
+}
+
+.modal-link-icon {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: -1px;
+}
+
