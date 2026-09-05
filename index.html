@@ -36,8 +36,8 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/swiss-theme.css">
-  <link rel="stylesheet" href="css/editor.css">
+  <link rel="stylesheet" href="css/swiss-theme.css?v=20260905_1525">
+  <link rel="stylesheet" href="css/editor.css?v=20260905_1525">
 </head>
 <body>
   <div class="app-container">
@@ -52,8 +52,8 @@
         </div>
         <div class="masthead-util">
           <div class="lang-switch" role="group" aria-label="Language Selector">
-            <button type="button" id="lang-ja" class="lang-btn active" title="日本語 (Japanese)">JA</button>
-            <button type="button" id="lang-en" class="lang-btn" title="English">EN</button>
+            <button type="button" id="lang-ja" class="lang-btn active" title="日本語 (Japanese)" onclick="if(window.app){window.app.setLanguage('ja', true);}">JA</button>
+            <button type="button" id="lang-en" class="lang-btn" title="English" onclick="if(window.app){window.app.setLanguage('en', true);}">EN</button>
           </div>
           <button type="button" id="btn-show-help" class="swiss-btn swiss-btn-help" data-i18n="helpBtn" data-i18n-title="helpBtnTitle" title="操作説明 [ ? ]">HELP [?]</button>
         </div>
@@ -73,7 +73,7 @@
           <!-- Arrow Mode Toggle (→ vs >) -->
           <div class="control-group">
             <label class="control-label" data-i18n="labelOperator">OPERATOR</label>
-            <div class="toggle-group" id="operator-toggle" role="group" aria-label="記号切り替え">
+            <div class="toggle-group" id="operator-toggle" role="group" data-i18n-aria-label="opToggleAria" aria-label="記号切り替え">
               <button type="button" class="toggle-btn active" data-op="arrow" data-i18n-title="opArrowTitle" title="共時的音韻規則 (→)">→</button>
               <button type="button" class="toggle-btn" data-op="greater" data-i18n-title="opGreaterTitle" title="通時的音変化 (>)">&gt;</button>
             </div>
@@ -149,7 +149,7 @@
             <span class="section-tag" data-i18n="sectionPreview">PREVIEW (LIVE)</span>
             <div class="preview-actions">
               <!-- Font Switch Toggle: 明朝 / ゴシック -->
-              <div class="toggle-group font-toggle-group" id="font-toggle" role="group" aria-label="フォント切り替え">
+              <div class="toggle-group font-toggle-group" id="font-toggle" role="group" data-i18n-aria-label="fontToggleAria" aria-label="フォント切り替え">
                 <button type="button" class="toggle-btn active" data-font="serif" data-i18n="fontSerif" data-i18n-title="fontSerifTitle" title="ローマン / 明朝体 (論文・LaTeX調)">明朝</button>
                 <button type="button" class="toggle-btn" data-font="sans" data-i18n="fontSans" data-i18n-title="fontSansTitle" title="サンセリフ / ゴシック体 (スライド・スイス調)">ゴシック</button>
               </div>
@@ -422,7 +422,7 @@
       <div class="modal-box">
         <div class="modal-header">
           <h2 id="help-title" class="modal-title" data-i18n="modalTitle">操作説明 (OPERATING INSTRUCTIONS)</h2>
-          <button type="button" class="modal-close" id="btn-close-help" aria-label="閉じる">&times;</button>
+          <button type="button" class="modal-close" id="btn-close-help" data-i18n-aria-label="modalCloseAria" aria-label="閉じる">&times;</button>
         </div>
         <div class="modal-body">
           <h3 data-i18n="modalShortcutsTitle">ショートカット (SHORTCUTS)</h3>
@@ -470,12 +470,12 @@
   </div>
 
   <!-- App Scripts -->
-  <script src="js/i18n.js"></script>
-  <script src="js/parser.js"></script>
-  <script src="js/katex-generator.js"></script>
-  <script src="js/svg-rule-renderer.js"></script>
-  <script src="js/presets.js"></script>
-  <script src="js/exporter.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/i18n.js?v=20260905_1525"></script>
+  <script src="js/parser.js?v=20260905_1525"></script>
+  <script src="js/katex-generator.js?v=20260905_1525"></script>
+  <script src="js/svg-rule-renderer.js?v=20260905_1525"></script>
+  <script src="js/presets.js?v=20260905_1525"></script>
+  <script src="js/exporter.js?v=20260905_1525"></script>
+  <script src="js/app.js?v=20260905_1525"></script>
 </body>
 </html>

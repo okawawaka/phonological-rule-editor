@@ -18,6 +18,7 @@ window.PhonologyI18n = {
     labelPreset: "PRESET",
     presetCustom: "カスタム (新規作成)",
     labelOperator: "OPERATOR",
+    opToggleAria: "記号切り替え (共時的規則 または 通時的音変化)",
     opArrowTitle: "共時的音韻規則 (→)",
     opGreaterTitle: "通時的音変化 (>)",
 
@@ -47,6 +48,7 @@ window.PhonologyI18n = {
     fontSerifTitle: "ローマン / 明朝体 (論文・LaTeX調)",
     fontSans: "ゴシック",
     fontSansTitle: "サンセリフ / ゴシック体 (スライド・スイス調)",
+    fontToggleAria: "フォント切り替え (明朝 または ゴシック)",
     zoomOutTitle: "縮小",
     zoomResetTitle: "リセット",
     zoomInTitle: "拡大",
@@ -121,6 +123,7 @@ window.PhonologyI18n = {
 
     // Modal
     modalTitle: "操作説明 (OPERATING INSTRUCTIONS)",
+    modalCloseAria: "閉じる",
     modalShortcutsTitle: "ショートカット (SHORTCUTS)",
     modalShortcut1: "<kbd>?</kbd> または <kbd>Shift</kbd> + <kbd>/</kbd> : 操作説明画面を開閉します。",
     modalShortcut2: "<kbd>Esc</kbd> : 操作説明画面を閉じます。",
@@ -156,6 +159,7 @@ window.PhonologyI18n = {
     labelPreset: "PRESET",
     presetCustom: "Custom (New Rule)",
     labelOperator: "OPERATOR",
+    opToggleAria: "Operator toggle (Synchronic rule or Diachronic sound change)",
     opArrowTitle: "Synchronic Phonological Rule (→)",
     opGreaterTitle: "Diachronic Sound Change (>)",
 
@@ -185,6 +189,7 @@ window.PhonologyI18n = {
     fontSerifTitle: "Roman / Serif (Publication & LaTeX style)",
     fontSans: "Sans",
     fontSansTitle: "Sans-Serif / Gothic (Slides & Swiss style)",
+    fontToggleAria: "Font style toggle (Serif or Sans)",
     zoomOutTitle: "Zoom Out",
     zoomResetTitle: "Reset Zoom",
     zoomInTitle: "Zoom In",
@@ -259,6 +264,7 @@ window.PhonologyI18n = {
 
     // Modal
     modalTitle: "OPERATING INSTRUCTIONS",
+    modalCloseAria: "Close modal",
     modalShortcutsTitle: "KEYBOARD SHORTCUTS",
     modalShortcut1: "<kbd>?</kbd> or <kbd>Shift</kbd> + <kbd>/</kbd> : Open / close instructions modal.",
     modalShortcut2: "<kbd>Esc</kbd> : Close modal.",

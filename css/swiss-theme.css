@@ -115,45 +115,44 @@ body {
 .masthead-util {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 /* Swiss-Style Language Switcher (JA / EN Segment Control) */
 .lang-switch {
   display: inline-flex;
-  align-items: center;
-  height: 26px;
+  align-items: stretch;
+  border: 1px solid var(--swiss-border);
   background: var(--swiss-white);
-  border: 1px solid var(--swiss-black);
-  border-radius: 0;
-  overflow: hidden;
-  user-select: none;
+  box-sizing: border-box;
+  vertical-align: middle;
 }
 
 .lang-btn {
-  background: var(--swiss-white);
-  border: none;
-  color: var(--swiss-gray-medium);
   font-family: var(--font-sans);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  padding: 0 10px;
-  height: 100%;
+  letter-spacing: 0.08em;
+  padding: 5px 12px;
+  background: transparent;
+  border: none;
+  color: var(--swiss-gray-medium);
   cursor: pointer;
+  line-height: 1.2;
+  transition: background-color 0.15s ease, color 0.15s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.1s ease, color 0.1s ease;
+  user-select: none;
 }
 
 .lang-btn:first-child {
-  border-right: 1px solid var(--swiss-black);
+  border-right: 1px solid var(--swiss-border);
 }
 
 .lang-btn:hover:not(.active) {
   color: var(--swiss-black);
-  background: var(--swiss-gray-subtle);
+  background: var(--swiss-surface-hover);
 }
 
 .lang-btn.active {
@@ -356,13 +355,18 @@ body {
   font-family: var(--font-sans);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   padding: 5px 14px;
   background-color: var(--swiss-white);
   border: 1px solid var(--swiss-border);
   color: var(--swiss-black);
   cursor: pointer;
   white-space: nowrap;
+  line-height: 1.2;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.15s ease;
 }
 

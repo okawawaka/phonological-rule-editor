@@ -69,6 +69,7 @@
         contextRight: document.getElementById('slot-body-contextRight')
       };
 
+      window.app = this;
       this.init();
     }
 
@@ -84,11 +85,15 @@
       return 'en';
     }
 
-    setLanguage(lang) {
+    setLanguage(lang, showNotification = false) {
       if (!window.PhonologyI18n || !window.PhonologyI18n[lang]) return;
       this.currentLang = lang;
       document.documentElement.lang = lang;
-      localStorage.setItem('phonology_editor_lang', lang);
+      try {
+        localStorage.setItem('phonology_editor_lang', lang);
+      } catch (e) {
+        console.warn('Storage save failed', e);
+      }
 
       const dict = window.PhonologyI18n[lang];
 
@@ -125,7 +130,17 @@
         }
       });
 
+      // Update elements with data-i18n-aria-label
+      document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+        const key = el.getAttribute('data-i18n-aria-label');
+        if (dict[key] !== undefined) {
+          el.setAttribute('aria-label', dict[key]);
+        }
+      });
+
       // Update language switcher buttons
+      if (!this.langJaBtn) this.langJaBtn = document.getElementById('lang-ja');
+      if (!this.langEnBtn) this.langEnBtn = document.getElementById('lang-en');
       if (this.langJaBtn) {
         this.langJaBtn.classList.toggle('active', lang === 'ja');
       }
@@ -133,8 +148,17 @@
         this.langEnBtn.classList.toggle('active', lang === 'en');
       }
 
+      // Re-query activeSlotNameLabel because data-i18n on sectionRuleSlots replaced innerHTML
+      this.activeSlotNameLabel = document.getElementById('active-slot-name');
+      this.setActiveSlot(this.activeSlot);
+
       // Re-populate presets in current language
       this.populatePresets();
+
+      if (showNotification) {
+        const toastMsg = lang === 'en' ? 'Switched language to English' : '言語を日本語に切り替えました';
+        this.showToast(toastMsg);
+      }
     }
 
     t(key, fallback = '') {
@@ -264,8 +288,14 @@
       }
 
       // Language switcher listeners
-      this.langJaBtn?.addEventListener('click', () => this.setLanguage('ja'));
-      this.langEnBtn?.addEventListener('click', () => this.setLanguage('en'));
+      this.langJaBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.setLanguage('ja', true);
+      });
+      this.langEnBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.setLanguage('en', true);
+      });
 
       // 6. Toggle KaTeX Drawer
       document.getElementById('btn-toggle-katex-code')?.addEventListener('click', () => {
@@ -840,9 +870,17 @@
     }
   }
 
-  // Initialize on DOM load
-  document.addEventListener('DOMContentLoaded', () => {
-    window.app = new PhonologyApp();
-  });
+  // Initialize app safely handling any DOM state
+  function initApp() {
+    if (!window.app) {
+      window.app = new PhonologyApp();
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+  } else {
+    initApp();
+  }
 
 })();
