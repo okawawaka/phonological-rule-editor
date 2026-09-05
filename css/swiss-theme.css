@@ -326,65 +326,73 @@ body {
   border-color: var(--swiss-black);
 }
 
-/* Modal Overlay & Box (Swiss Typographic Style) */
+/* ==========================================================
+   Operating Instructions Modal (matching ipa-keyboard design)
+   ========================================================== */
+.modal-backdrop,
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.45);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 2000;
+  justify-content: center;
+  z-index: 10002;
   opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.15s ease, visibility 0.15s ease;
-  padding: 20px;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
 }
 
+.modal-backdrop.active,
+.modal-backdrop.open,
+.modal-overlay.active,
 .modal-overlay.open {
   opacity: 1;
-  visibility: visible;
+  pointer-events: auto;
 }
 
 .modal-box {
-  background: var(--swiss-white);
+  background: #ffffff;
   border: 2px solid var(--swiss-black);
-  width: 580px;
-  max-width: 95vw;
+  border-radius: 0;
+  width: 92%;
+  max-width: 620px;
   max-height: 85vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .modal-header {
-  height: 42px;
-  padding: 0 16px;
-  background: var(--swiss-gray-subtle);
-  border-bottom: 1px solid var(--swiss-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 2px solid var(--swiss-black);
+  background: #18181b;
+  color: #ffffff;
 }
 
 .modal-title {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--swiss-black);
+  color: #ffffff;
 }
 
 .modal-close {
-  background: transparent;
+  background: none;
   border: none;
   font-size: 20px;
-  line-height: 1;
-  color: var(--swiss-black);
+  color: #ffffff;
   cursor: pointer;
-  padding: 4px;
+  padding: 0 4px;
+  line-height: 1;
   transition: color 0.12s ease;
 }
 
@@ -393,54 +401,61 @@ body {
 }
 
 .modal-body {
-  padding: 18px 22px;
+  padding: 20px 24px;
   overflow-y: auto;
+  font-family: var(--font-sans);
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--swiss-black);
 }
 
-.modal-body h4 {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+.modal-body h3 {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--swiss-black);
-  margin: 14px 0 6px;
+  margin: 16px 0 8px;
   border-bottom: 1px solid var(--swiss-border);
-  padding-bottom: 3px;
+  padding-bottom: 4px;
 }
 
-.modal-body h4:first-child {
+.modal-body h3:first-child {
   margin-top: 0;
 }
 
-.modal-body ul {
-  margin-left: 18px;
+.modal-body p {
   margin-bottom: 10px;
+}
+
+.modal-body ul {
+  margin-left: 20px;
+  margin-bottom: 14px;
 }
 
 .modal-body li {
   margin-bottom: 4px;
-  font-size: 12.5px;
 }
 
 .modal-body kbd {
+  display: inline-block;
+  padding: 2px 6px;
   font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 600;
-  padding: 1px 5px;
-  border: 1px solid var(--swiss-border);
-  background: var(--swiss-gray-subtle);
+  font-weight: 700;
+  background: #f4f4f5;
+  border: 1px solid var(--swiss-black);
+  border-radius: 0;
   color: var(--swiss-black);
 }
 
 .modal-body code {
   font-family: var(--font-mono);
-  font-size: 11px;
-  padding: 1px 4px;
-  background: var(--swiss-bg);
+  font-size: 11.5px;
+  padding: 1px 5px;
+  background: var(--swiss-gray-subtle);
   border: 1px solid var(--swiss-border);
+  border-radius: 0;
   color: var(--swiss-black);
 }
 
@@ -455,20 +470,20 @@ body {
   font-weight: 700;
   letter-spacing: 0.04em;
   padding: 5px 12px;
-  background: var(--swiss-surface);
-  border: 1px solid var(--swiss-border);
+  background: #f4f4f5;
+  border: 1px solid #27272a;
   border-radius: 0;
   transition: background-color 0.1s ease, color 0.1s ease, border-color 0.1s ease;
 }
 
 .modal-link:hover {
   background: var(--swiss-black);
-  color: var(--swiss-white) !important;
+  color: #ffffff !important;
   border-color: var(--swiss-black);
 }
 
 .modal-link:hover .modal-link-icon {
-  fill: var(--swiss-white);
+  fill: #ffffff;
 }
 
 .modal-link-icon {
@@ -479,4 +494,5 @@ body {
   display: inline-block;
   vertical-align: -1px;
 }
+
 

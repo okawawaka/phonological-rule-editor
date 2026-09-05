@@ -268,7 +268,7 @@
 
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-          if (this.helpModal && this.helpModal.classList.contains('open')) {
+          if (this.helpModal && (this.helpModal.classList.contains('open') || this.helpModal.classList.contains('active'))) {
             this.closeHelp();
             return;
           }
@@ -287,15 +287,28 @@
     }
 
     openHelp() {
-      if (this.helpModal) this.helpModal.classList.add('open');
+      if (this.helpModal) {
+        this.helpModal.classList.add('active');
+        this.helpModal.classList.add('open');
+      }
     }
 
     closeHelp() {
-      if (this.helpModal) this.helpModal.classList.remove('open');
+      if (this.helpModal) {
+        this.helpModal.classList.remove('active');
+        this.helpModal.classList.remove('open');
+      }
     }
 
     toggleHelp() {
-      if (this.helpModal) this.helpModal.classList.toggle('open');
+      if (this.helpModal) {
+        const isOpen = this.helpModal.classList.contains('active') || this.helpModal.classList.contains('open');
+        if (isOpen) {
+          this.closeHelp();
+        } else {
+          this.openHelp();
+        }
+      }
     }
 
     setActiveSlot(slotKey) {
