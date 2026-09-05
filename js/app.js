@@ -155,6 +155,10 @@
       // Re-populate presets in current language
       this.populatePresets();
 
+      // Re-render slot inputs and custom chips with localized placeholders/titles
+      this.renderSlotsGUI();
+      this.renderCustomFeatureChips();
+
       if (showNotification) {
         const toastMsg = lang === 'en' ? 'Switched language to English' : '言語を日本語に切り替えました';
         this.showToast(toastMsg);
@@ -543,7 +547,7 @@
         chip.className = 'chip chip-custom';
         chip.setAttribute('data-insert', feat);
         chip.textContent = feat;
-        chip.title = `クリックして ${feat} を挿入`;
+        chip.title = this.t('chipInsertTitle', 'クリックして {val} を挿入').replace('{val}', feat);
         chip.addEventListener('click', () => {
           this.insertPaletteItem(feat, true);
         });
@@ -664,7 +668,7 @@
               const delBtn = document.createElement('span');
               delBtn.className = 'matrix-feature-del';
               delBtn.textContent = '×';
-              delBtn.title = '素性を削除';
+              delBtn.title = this.t('removeFeatureTitle', '素性を削除');
               delBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.removeFeatureFromMatrix(slotKey, mIdx, fIdx);
@@ -684,7 +688,7 @@
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'slot-direct-input';
-        input.placeholder = '音素 (p, *p等)';
+        input.placeholder = this.t('slotInputPlaceholder', '音素 (p, *p等)');
         input.value = segEl ? segEl.value : '';
         input.spellcheck = false;
 

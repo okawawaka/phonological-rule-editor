@@ -498,11 +498,20 @@
 .palette-group-title {
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--swiss-gray-medium);
-  min-width: 125px;
+  width: 155px;
+  min-width: 155px;
+  max-width: 155px;
   flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.custom-feature-group .palette-group-title {
+  width: 143px;
+  min-width: 143px;
+  max-width: 143px;
 }
 
 .chip-container {

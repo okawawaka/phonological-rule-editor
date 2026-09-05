@@ -45,9 +45,9 @@ window.PhonologyI18n = {
     // Section 2: Preview
     sectionPreview: "PREVIEW (LIVE)",
     fontSerif: "明朝",
-    fontSerifTitle: "ローマン / 明朝体 (論文・LaTeX調)",
+    fontSerifTitle: "明朝体 / ローマン (論文・組版向け)",
     fontSans: "ゴシック",
-    fontSansTitle: "サンセリフ / ゴシック体 (スライド・スイス調)",
+    fontSansTitle: "ゴシック体 / サンセリフ (スライド・画面表示向け)",
     fontToggleAria: "フォント切り替え (明朝 または ゴシック)",
     zoomOutTitle: "縮小",
     zoomResetTitle: "リセット",
@@ -64,6 +64,9 @@ window.PhonologyI18n = {
     slotOperatorTitle: "クリックで矢印 (→) と音変化 (>) を切り替え",
     addMatrixTitle: "素性行列 [ ± ] を追加",
     clearSlotTitle: "クリア",
+    slotInputPlaceholder: "音素 (p, *p等)",
+    removeFeatureTitle: "素性を削除",
+    chipInsertTitle: "クリックして {val} を挿入",
 
     // Section 3: Palette
     sectionPalette: "QUICK PALETTE (CLICK TO INSERT INTO ACTIVE SLOT)",
@@ -186,9 +189,9 @@ window.PhonologyI18n = {
     // Section 2: Preview
     sectionPreview: "PREVIEW (LIVE)",
     fontSerif: "Serif",
-    fontSerifTitle: "Roman / Serif (Publication & LaTeX style)",
+    fontSerifTitle: "Serif / Roman (Papers & Print)",
     fontSans: "Sans",
-    fontSansTitle: "Sans-Serif / Gothic (Slides & Swiss style)",
+    fontSansTitle: "Sans-Serif / Gothic (Slides & Display)",
     fontToggleAria: "Font style toggle (Serif or Sans)",
     zoomOutTitle: "Zoom Out",
     zoomResetTitle: "Reset Zoom",
@@ -205,6 +208,9 @@ window.PhonologyI18n = {
     slotOperatorTitle: "Click to toggle arrow (→) and sound change (>)",
     addMatrixTitle: "Add feature matrix [ ± ]",
     clearSlotTitle: "Clear slot",
+    slotInputPlaceholder: "Phoneme (e.g. p, *p)",
+    removeFeatureTitle: "Remove feature",
+    chipInsertTitle: "Click to insert {val}",
 
     // Section 3: Palette
     sectionPalette: "QUICK PALETTE (CLICK TO INSERT INTO ACTIVE SLOT)",
@@ -227,13 +233,13 @@ window.PhonologyI18n = {
     symPalatalizedTitle: "Palatalized Diacritic (ʲ)",
     symLongTitle: "Length Mark (ː)",
 
-    groupMajorClass: "Major Class Features",
-    groupLaryngeal: "Laryngeal Features",
-    groupManner: "Manner Features",
-    groupCoronal: "Coronal Features",
-    groupDorsalVowel: "Dorsal & Vowel Features",
-    groupLabial: "Labial Features",
-    groupProsodic: "Suprasegmental & Prosodic Features",
+    groupMajorClass: "Major Class",
+    groupLaryngeal: "Laryngeal",
+    groupManner: "Manner",
+    groupCoronal: "Coronal",
+    groupDorsalVowel: "Dorsal & Vowel",
+    groupLabial: "Labial",
+    groupProsodic: "Prosodic",
 
     // Presets
     presetCatSynchronic: "Synchronic Rules (→)",
