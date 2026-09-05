@@ -2,6 +2,9 @@
 
 言語学における音韻規則（共時的規則）および音変化（通時的変化）を記述・可視化し、画像（PNG / SVG）や LaTeX 数式コード（KaTeX）として出力する Web アプリケーション。
 
+- **Web アプリ (GitHub Pages)**: https://okawawaka.github.io/phonological-rule-editor/
+- **リポジトリ**: https://github.com/okawawaka/phonological-rule-editor
+
 ## 機能仕様
 
 - **入力方式**:
