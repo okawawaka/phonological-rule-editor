@@ -1,0 +1,10 @@
+﻿<svg xmlns=http://www.w3.org/2000/svg viewBox=0 0 64 64 width=64 height=64>
+  <rect width=64 height=64 rx=14 fill=#111111/>
+  <rect x=2 y=2 width=60 height=60 rx=12 fill=none stroke=#2a2a2a stroke-width=1.5/>
+  <!-- Left Bracket [ -->
+  <path d=M 18 16 H 13 V 48 H 18 fill=none stroke=#FFFFFF stroke-width=3.5 stroke-linecap=square/>
+  <!-- Right Bracket ] -->
+  <path d=M 46 16 H 51 V 48 H 46 fill=none stroke=#FFFFFF stroke-width=3.5 stroke-linecap=square/>
+  <!-- Phonological Arrow → in Swiss Red -->
+  <path d=M 23 32 H 41 M 33 24 L 41 32 L 33 40 fill=none stroke=#E30613 stroke-width=3.6 stroke-linecap=round stroke-linejoin=round/>
+</svg>
