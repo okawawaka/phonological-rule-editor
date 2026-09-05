@@ -26,6 +26,8 @@
       this.customFeaturePrefix = '+';
       this.customFeatures = []; // User-created custom features
 
+      this.currentLang = 'ja';
+
       // DOM Elements
       this.katexDisplay = document.getElementById('katex-display');
       this.rawInput = document.getElementById('raw-notation-input');
@@ -37,6 +39,10 @@
       this.fontToggle = document.getElementById('font-toggle');
       this.toast = document.getElementById('toast');
       this.activeSlotNameLabel = document.getElementById('active-slot-name');
+
+      // Language Switcher elements
+      this.langJaBtn = document.getElementById('lang-ja');
+      this.langEnBtn = document.getElementById('lang-en');
 
       // Custom feature maker elements
       this.customValToggle = document.getElementById('custom-val-toggle');
@@ -66,18 +72,96 @@
       this.init();
     }
 
-    init() {
+    getInitialLanguage() {
+      const saved = localStorage.getItem('phonology_editor_lang');
+      if (saved === 'ja' || saved === 'en') {
+        return saved;
+      }
+      const navLang = (navigator.language || (navigator.languages && navigator.languages[0]) || '').toLowerCase();
+      if (navLang.startsWith('ja')) {
+        return 'ja';
+      }
+      return 'en';
+    }
+
+    setLanguage(lang) {
+      if (!window.PhonologyI18n || !window.PhonologyI18n[lang]) return;
+      this.currentLang = lang;
+      document.documentElement.lang = lang;
+      localStorage.setItem('phonology_editor_lang', lang);
+
+      const dict = window.PhonologyI18n[lang];
+
+      // Update document title
+      if (dict.docTitle) {
+        document.title = dict.docTitle;
+      }
+
+      // Update elements with data-i18n
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key] !== undefined) {
+          if (dict[key].includes('<') && dict[key].includes('>')) {
+            el.innerHTML = dict[key];
+          } else {
+            el.textContent = dict[key];
+          }
+        }
+      });
+
+      // Update elements with data-i18n-title
+      document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const key = el.getAttribute('data-i18n-title');
+        if (dict[key] !== undefined) {
+          el.setAttribute('title', dict[key]);
+        }
+      });
+
+      // Update elements with data-i18n-placeholder
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (dict[key] !== undefined) {
+          el.setAttribute('placeholder', dict[key]);
+        }
+      });
+
+      // Update language switcher buttons
+      if (this.langJaBtn) {
+        this.langJaBtn.classList.toggle('active', lang === 'ja');
+      }
+      if (this.langEnBtn) {
+        this.langEnBtn.classList.toggle('active', lang === 'en');
+      }
+
+      // Re-populate presets in current language
       this.populatePresets();
+    }
+
+    t(key, fallback = '') {
+      const dict = window.PhonologyI18n && window.PhonologyI18n[this.currentLang];
+      return (dict && dict[key]) || fallback;
+    }
+
+    init() {
       this.setupEventListeners();
       this.loadSavedState();
       this.renderCustomFeatureChips();
+      this.setLanguage(this.getInitialLanguage());
     }
 
     populatePresets() {
-      if (!window.PhonologyPresets || !this.presetSelect) return;
+      if (!this.presetSelect) return;
+      const currentSelected = this.presetSelect.value;
+      const presets = typeof window.getLocalizedPresets === 'function'
+        ? window.getLocalizedPresets(this.currentLang)
+        : (window.PhonologyPresets || []);
+
+      const customLabel = this.t('presetCustom', 'カスタム (新規作成)');
+
+      this.presetSelect.innerHTML = `<option value="">${customLabel}</option>`;
 
       const categories = {};
-      window.PhonologyPresets.forEach(preset => {
+      presets.forEach(preset => {
         if (!categories[preset.category]) {
           categories[preset.category] = [];
         }
@@ -91,6 +175,9 @@
           const opt = document.createElement('option');
           opt.value = p.id;
           opt.textContent = p.name;
+          if (p.id === currentSelected) {
+            opt.selected = true;
+          }
           group.appendChild(opt);
         });
         this.presetSelect.appendChild(group);
@@ -176,6 +263,10 @@
         });
       }
 
+      // Language switcher listeners
+      this.langJaBtn?.addEventListener('click', () => this.setLanguage('ja'));
+      this.langEnBtn?.addEventListener('click', () => this.setLanguage('en'));
+
       // 6. Toggle KaTeX Drawer
       document.getElementById('btn-toggle-katex-code')?.addEventListener('click', () => {
         if (this.katexDrawer) {
@@ -188,13 +279,17 @@
         const presetId = e.target.value;
         if (!presetId) return;
 
-        const preset = window.PhonologyPresets.find(p => p.id === presetId);
+        const presets = typeof window.getLocalizedPresets === 'function'
+          ? window.getLocalizedPresets(this.currentLang)
+          : (window.PhonologyPresets || []);
+        const preset = presets.find(p => p.id === presetId);
         if (preset) {
           if (preset.operator) {
             this.operatorMode = preset.operator;
           }
           this.parseFromText(preset.text, true);
-          this.showToast(`読込: ${preset.name}`);
+          const prefix = this.t('toastLoadedPreset', '読込: ');
+          this.showToast(`${prefix}${preset.name}`);
         }
       });
 
@@ -227,7 +322,8 @@
         }
 
         this.customFeatureInput.value = '';
-        this.showToast(`カスタム素性「${fullFeature}」を追加しました`);
+        const toastMsg = this.t('toastAddedCustomFeature', 'カスタム素性「{name}」を追加しました').replace('{name}', fullFeature);
+        this.showToast(toastMsg);
       };
 
       this.btnAddCustomFeature?.addEventListener('click', handleAddCustomFeature);
@@ -348,7 +444,10 @@
       }
 
       this.syncAndRender(true);
-      this.showToast(op === 'greater' ? '通時的音変化 (>) に切り替えました' : '共時的規則 (→) に切り替えました');
+      const opMsg = op === 'greater'
+        ? (this.currentLang === 'en' ? 'Switched to Diachronic Sound Change (>)' : '通時的音変化 (>) に切り替えました')
+        : (this.currentLang === 'en' ? 'Switched to Synchronic Rule (→)' : '共時的規則 (→) に切り替えました');
+      this.showToast(opMsg);
     }
 
     setFontStyle(font) {
@@ -365,7 +464,10 @@
       }
 
       this.saveState();
-      this.showToast(font === 'serif' ? 'フォント: 明朝体 / ローマン (Serif) に設定' : 'フォント: ゴシック体 / サンセリフ (Sans) に設定');
+      const fontMsg = font === 'serif'
+        ? (this.currentLang === 'en' ? 'Font set to Serif / Roman' : 'フォント: 明朝体 / ローマン (Serif) に設定')
+        : (this.currentLang === 'en' ? 'Font set to Sans-Serif / Gothic' : 'フォント: ゴシック体 / サンセリフ (Sans) に設定');
+      this.showToast(fontMsg);
     }
 
     insertPaletteItem(val, isFeature) {
@@ -615,56 +717,62 @@
     async copyKatex() {
       const code = this.katexOutput ? this.katexOutput.value : '';
       if (!code) {
-        this.showToast('コピーするコードがありません');
+        this.showToast(this.t('toastNoCode', 'コピーするコードがありません'));
         return;
       }
       try {
         await window.PhonologyExporter.copyKatexCode(code);
-        this.showToast('KaTeXコードをコピーしました！');
+        this.showToast(this.t('toastKatexCopied', 'KaTeXコードをコピーしました！'));
       } catch (err) {
         console.error('KaTeX copy error', err);
-        this.showToast('KaTeXコードのコピーに失敗しました');
+        this.showToast(this.t('toastNoCode', 'KaTeXコードのコピーに失敗しました'));
       }
     }
 
     async exportPng() {
+      const fontLabel = this.fontStyle === 'serif' ? this.t('fontNameSerif', '明朝') : this.t('fontNameSans', 'ゴシック');
       try {
         await window.PhonologyExporter.downloadPng(this.currentAst, this.operatorMode, 'phonological-rule.png', {
           fontStyle: this.fontStyle
         });
-        this.showToast(`高解像度PNG (${this.fontStyle === 'serif' ? '明朝' : 'ゴシック'}) をダウンロードしました！`);
+        const msg = this.t('toastPngDownloaded', '高解像度PNG ({font}) をダウンロードしました！').replace('{font}', fontLabel);
+        this.showToast(msg);
       } catch (err) {
         console.error('PNG export error', err);
-        this.showToast('PNGダウンロードに失敗しました');
+        this.showToast(this.t('toastPngFailed', 'PNGダウンロードに失敗しました'));
       }
     }
 
     async copyPng() {
+      const fontLabel = this.fontStyle === 'serif' ? this.t('fontNameSerif', '明朝') : this.t('fontNameSans', 'ゴシック');
       try {
         await window.PhonologyExporter.copyPngToClipboard(this.currentAst, this.operatorMode, {
           fontStyle: this.fontStyle
         });
-        this.showToast(`PNG画像 (${this.fontStyle === 'serif' ? '明朝' : 'ゴシック'}) をクリップボードにコピーしました！`);
+        const msg = this.t('toastPngCopied', 'PNG画像 ({font}) をクリップボードにコピーしました！').replace('{font}', fontLabel);
+        this.showToast(msg);
       } catch (err) {
         console.warn('Direct image clipboard copy failed, falling back to download...', err);
         try {
           await this.exportPng();
-          this.showToast('ブラウザ制限のためPNG画像をダウンロード保存しました');
+          this.showToast(this.t('toastPngFallback', 'ブラウザ制限のためPNG画像をダウンロード保存しました'));
         } catch (e) {
-          this.showToast('画像コピーに失敗しました');
+          this.showToast(this.t('toastPngFailed', '画像コピーに失敗しました'));
         }
       }
     }
 
     async exportSvg() {
+      const fontLabel = this.fontStyle === 'serif' ? this.t('fontNameSerif', '明朝') : this.t('fontNameSans', 'ゴシック');
       try {
         await window.PhonologyExporter.downloadSvg(this.currentAst, this.operatorMode, 'phonological-rule.svg', {
           fontStyle: this.fontStyle
         });
-        this.showToast(`ベクターSVG (${this.fontStyle === 'serif' ? '明朝' : 'ゴシック'}) をダウンロードしました！`);
+        const msg = this.t('toastSvgDownloaded', 'ベクターSVG ({font}) をダウンロードしました！').replace('{font}', fontLabel);
+        this.showToast(msg);
       } catch (err) {
         console.error('SVG export error', err);
-        this.showToast('SVG出力に失敗しました');
+        this.showToast(this.t('toastSvgFailed', 'SVG出力に失敗しました'));
       }
     }
 

@@ -120,6 +120,53 @@ if (svgSerif.svg.includes('<foreignObject>') || svgSans.svg.includes('<foreignOb
 }
 console.log(`  ✓ Serif SVG (${svgSerif.width}x${svgSerif.height}px) and Sans SVG (${svgSans.width}x${svgSans.height}px) rendered cleanly`);
 
+// Test 6: Multilingual localization (i18n) verification
+console.log('\n[Test 6] Testing i18n Localization (JA & EN) & Zero Japanese in English...');
+const i18nCode = fs.readFileSync(path.join(__dirname, 'js/i18n.js'), 'utf-8');
+new Function(i18nCode)();
+const { PhonologyI18n, getLocalizedPresets } = globalThis;
+
+if (!PhonologyI18n || !PhonologyI18n.ja || !PhonologyI18n.en) {
+  console.error('FAIL: PhonologyI18n must have ja and en dictionaries');
+  process.exit(1);
+}
+
+// Check key symmetry
+const jaKeys = Object.keys(PhonologyI18n.ja);
+const enKeys = Object.keys(PhonologyI18n.en);
+const missingInEn = jaKeys.filter(k => !(k in PhonologyI18n.en));
+const missingInJa = enKeys.filter(k => !(k in PhonologyI18n.ja));
+
+if (missingInEn.length > 0) {
+  console.error('FAIL: Missing i18n keys in en:', missingInEn);
+  process.exit(1);
+}
+if (missingInJa.length > 0) {
+  console.error('FAIL: Missing i18n keys in ja:', missingInJa);
+  process.exit(1);
+}
+
+// Ensure NO Japanese characters (Hiragana, Katakana, Kanji) exist in English dictionary values
+const japaneseRegex = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/;
+for (const [key, val] of Object.entries(PhonologyI18n.en)) {
+  if (typeof val === 'string' && japaneseRegex.test(val)) {
+    console.error(`FAIL: English dictionary key "${key}" contains Japanese text: "${val}"`);
+    process.exit(1);
+  }
+}
+
+// Verify getLocalizedPresets
+const enPresets = getLocalizedPresets('en');
+enPresets.forEach(p => {
+  if (japaneseRegex.test(p.category) || japaneseRegex.test(p.name)) {
+    console.error(`FAIL: English preset ${p.id} contains Japanese text: ${p.category} / ${p.name}`);
+    process.exit(1);
+  }
+});
+console.log('  ✓ All i18n keys match between JA and EN');
+console.log('  ✓ Verified ZERO Japanese characters exist in English dictionary and presets');
+
 console.log('\n=============================================');
 console.log('All Phonological Rule Editor tests passed! ✓');
 console.log('=============================================');
+
