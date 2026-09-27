@@ -40,6 +40,11 @@
       this.toast = document.getElementById('toast');
       this.activeSlotNameLabel = document.getElementById('active-slot-name');
 
+      // Status Ticker elements
+      this.statusSymbolEl = document.getElementById('status-symbol');
+      this.statusNameEl = document.getElementById('status-name');
+      this.statusDescEl = document.getElementById('status-desc');
+
       // Language Switcher elements
       this.langJaBtn = document.getElementById('lang-ja');
       this.langEnBtn = document.getElementById('lang-en');
@@ -159,6 +164,9 @@
       this.renderSlotsGUI();
       this.renderCustomFeatureChips();
 
+      // Refresh status ticker with current localized default message
+      this.resetStatusTicker();
+
       if (showNotification) {
         const toastMsg = lang === 'en' ? 'Switched language to English' : '言語を日本語に切り替えました';
         this.showToast(toastMsg);
@@ -170,8 +178,114 @@
       return (dict && dict[key]) || fallback;
     }
 
+    setStatusTicker(symbol, name, desc = '') {
+      if (this.statusSymbolEl) this.statusSymbolEl.textContent = symbol ? `[ ${symbol} ]` : '[ - ]';
+      if (this.statusNameEl) this.statusNameEl.textContent = name;
+      if (this.statusDescEl) this.statusDescEl.textContent = desc;
+    }
+
+    resetStatusTicker() {
+      if (this.statusSymbolEl) this.statusSymbolEl.textContent = '[ - ]';
+      if (this.statusNameEl) {
+        this.statusNameEl.textContent = this.t('statusDefault', '素性や音素にカーソルを合わせると名称と解説が表示されます');
+      }
+      if (this.statusDescEl) {
+        this.statusDescEl.textContent = '';
+      }
+    }
+
+    setupStatusTickerEvents() {
+      document.body.addEventListener('pointerover', (e) => {
+        const isEn = this.currentLang === 'en';
+        
+        // 1. Chip in palette
+        const chip = e.target.closest('.chip');
+        if (chip) {
+          const val = chip.getAttribute('data-insert') || chip.textContent.trim();
+          const title = chip.getAttribute('title') || chip.getAttribute('data-i18n-title');
+          let name = title;
+          let desc = isEn ? 'Click to insert into active slot' : 'クリックで選択中スロットに挿入';
+
+          if (!name) {
+            if (chip.classList.contains('chip-phoneme')) {
+              name = isEn ? `Phoneme /${val}/` : `音素 /${val}/`;
+            } else if (chip.classList.contains('chip-feature')) {
+              name = isEn ? `Feature [${val}]` : `弁別素性 [${val}]`;
+            } else if (chip.classList.contains('chip-custom')) {
+              name = isEn ? `Custom Feature [${val}]` : `カスタム素性 [${val}]`;
+            } else {
+              name = val;
+            }
+          }
+          this.setStatusTicker(val, name, desc);
+          return;
+        }
+
+        // 2. Export buttons
+        const exportBtn = e.target.closest('.header-toolbar .swiss-btn');
+        if (exportBtn) {
+          const title = exportBtn.getAttribute('title') || exportBtn.textContent.trim();
+          this.setStatusTicker('EXPORT', title, isEn ? 'Export rule visualization or LaTeX code' : '規則の画像保存またはLaTeXコード出力');
+          return;
+        }
+
+        // 3. Operators
+        const opToggleBtn = e.target.closest('#operator-toggle .toggle-btn');
+        if (opToggleBtn) {
+          const op = opToggleBtn.getAttribute('data-op');
+          if (op === 'arrow') {
+            this.setStatusTicker('→', isEn ? 'Synchronic Rule' : '共時的音韻規則 (→)', isEn ? 'Rule applying within a single synchronic state' : '共時的な音韻プロセス');
+          } else {
+            this.setStatusTicker('>', isEn ? 'Diachronic Sound Change' : '通時的音変化 (>)', isEn ? 'Historical sound change across time (e.g. *p > f)' : '通時的な音変化・再建形');
+          }
+          return;
+        }
+
+        const slotOp = e.target.closest('#operator-display');
+        if (slotOp) {
+          this.setStatusTicker(this.operatorMode === 'arrow' ? '→' : '>', isEn ? 'Switch Operator' : '記号切り替え (→ / >)', isEn ? 'Click to toggle rule type' : 'クリックで規則タイプを切り替え');
+          return;
+        }
+
+        // 4. Slot card
+        const slotCard = e.target.closest('.slot-card');
+        if (slotCard) {
+          const slotKey = slotCard.getAttribute('data-slot');
+          const slotNames = {
+            target: { sym: 'A', name: isEn ? 'Target Sound' : '標的音 (Target)', desc: isEn ? 'Input phoneme or feature matrix undergoing change' : '変化を起こす対象の音素・素性行列' },
+            change: { sym: 'B', name: isEn ? 'Structural Change' : '変化後 (Change)', desc: isEn ? 'Resulting phoneme or features after rule applies' : '変化後の音素または素性' },
+            contextLeft: { sym: 'C', name: isEn ? 'Preceding Context' : '先行環境 (Left Context)', desc: isEn ? 'Phonological environment immediately before target' : '標的音の直前に位置する環境' },
+            contextRight: { sym: 'D', name: isEn ? 'Following Context' : '後続環境 (Right Context)', desc: isEn ? 'Phonological environment immediately after target' : '標的音の直後に位置する環境' }
+          };
+          const info = slotNames[slotKey];
+          if (info) {
+            this.setStatusTicker(info.sym, info.name, info.desc);
+            return;
+          }
+        }
+
+        // 5. Help button
+        const helpBtn = e.target.closest('#btn-show-help');
+        if (helpBtn) {
+          this.setStatusTicker('?', isEn ? 'Operating Instructions' : '操作説明・記法ガイド', isEn ? 'Keyboard shortcuts & syntax reference' : 'ショートカットおよび記法リファレンス');
+          return;
+        }
+      });
+
+      document.body.addEventListener('pointerout', (e) => {
+        const interactive = e.target.closest('.chip, .header-toolbar .swiss-btn, #operator-toggle .toggle-btn, #operator-display, .slot-card, #btn-show-help');
+        if (interactive) {
+          const toEl = e.relatedTarget;
+          if (!toEl || !interactive.contains(toEl)) {
+            this.resetStatusTicker();
+          }
+        }
+      });
+    }
+
     init() {
       this.setupEventListeners();
+      this.setupStatusTickerEvents();
       this.loadSavedState();
       this.renderCustomFeatureChips();
       this.setLanguage(this.getInitialLanguage());

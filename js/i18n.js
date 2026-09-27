@@ -11,8 +11,9 @@ window.PhonologyI18n = {
     appSubtitle: "PHONOLOGICAL RULE EDITOR",
 
     // Masthead & Utility
-    helpBtn: "HELP [?]",
+    helpBtn: "HELP [ ? ]",
     helpBtnTitle: "操作説明 [ ? ]",
+    statusDefault: "素性や音素にカーソルを合わせると名称と解説が表示されます",
 
     // Toolbar - Controls
     labelPreset: "PRESET",
@@ -35,6 +36,7 @@ window.PhonologyI18n = {
 
     // Section 1: Bidirectional Text Notation
     sectionTextNotation: "TEXT NOTATION (BIDIRECTIONAL)",
+    secTextNotationSub: "リアルタイム双方向同期",
     badgeRealtimeSync: "リアルタイム双方向同期",
     syntaxGuidePill: "例: <code>[+syl] -> [+nas] / _ [+nas]</code> または <code>*p > f / # _</code>",
     btnToggleKatex: "KaTeX コード表示",
@@ -44,6 +46,7 @@ window.PhonologyI18n = {
 
     // Section 2: Preview
     sectionPreview: "PREVIEW (LIVE)",
+    secPreviewSub: "リアルタイム組版レンダリング",
     fontSerif: "明朝",
     fontSerifTitle: "明朝体 / ローマン (論文・組版向け)",
     fontSans: "ゴシック",
@@ -55,6 +58,7 @@ window.PhonologyI18n = {
 
     // Section 2: Rule Slots
     sectionRuleSlots: "RULE SLOTS (ACTIVE: <span id=\"active-slot-name\">A</span>)",
+    secRuleSlotsSub: "構造化GUIビルダークリック編集",
     slotsHelpBadge: "直接タイピング または 下のパレットで入力",
     slotTargetTitle: "標的音 (Target)",
     slotChangeTitle: "変化後 (Change)",
@@ -70,6 +74,7 @@ window.PhonologyI18n = {
 
     // Section 3: Palette
     sectionPalette: "QUICK PALETTE (CLICK TO INSERT INTO ACTIVE SLOT)",
+    secPaletteSub: "記号・素性クイック挿入",
     paletteHint: "ワンクリックで選択中のスロットへ即座に挿入されます",
 
     groupCustomFeature: "カスタム素性作成",
@@ -155,8 +160,9 @@ window.PhonologyI18n = {
     appSubtitle: "SYNCHRONIC RULES & DIACHRONIC SOUND CHANGE",
 
     // Masthead & Utility
-    helpBtn: "HELP [?]",
+    helpBtn: "HELP [ ? ]",
     helpBtnTitle: "Help & Instructions [ ? ]",
+    statusDefault: "Hover over features or phonemes to see details and notation guide",
 
     // Toolbar - Controls
     labelPreset: "PRESET",
@@ -179,6 +185,7 @@ window.PhonologyI18n = {
 
     // Section 1: Bidirectional Text Notation
     sectionTextNotation: "TEXT NOTATION (BIDIRECTIONAL)",
+    secTextNotationSub: "REAL-TIME BI-DIRECTIONAL SYNC",
     badgeRealtimeSync: "Real-time Bi-directional Sync",
     syntaxGuidePill: "e.g.: <code>[+syl] -> [+nas] / _ [+nas]</code> or <code>*p > f / # _</code>",
     btnToggleKatex: "View KaTeX Code",
@@ -188,6 +195,7 @@ window.PhonologyI18n = {
 
     // Section 2: Preview
     sectionPreview: "PREVIEW (LIVE)",
+    secPreviewSub: "LIVE KATEX RENDERING",
     fontSerif: "Serif",
     fontSerifTitle: "Serif / Roman (Papers & Print)",
     fontSans: "Sans",
@@ -199,6 +207,7 @@ window.PhonologyI18n = {
 
     // Section 2: Rule Slots
     sectionRuleSlots: "RULE SLOTS (ACTIVE: <span id=\"active-slot-name\">A</span>)",
+    secRuleSlotsSub: "STRUCTURED GUI BUILDER",
     slotsHelpBadge: "Type directly or click palette below",
     slotTargetTitle: "Target (A)",
     slotChangeTitle: "Output / Change (B)",
@@ -214,6 +223,7 @@ window.PhonologyI18n = {
 
     // Section 3: Palette
     sectionPalette: "QUICK PALETTE (CLICK TO INSERT INTO ACTIVE SLOT)",
+    secPaletteSub: "FAST SYMBOL & FEATURE INSERTER",
     paletteHint: "Clicking inserts immediately into active slot",
 
     groupCustomFeature: "Custom Features",

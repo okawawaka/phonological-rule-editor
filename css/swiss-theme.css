@@ -1,163 +1,170 @@
-/* ==========================================================================
-   Swiss Theme (International Typographic Style)
-   Design principles:
-   - Asymmetric grid layouts
-   - Strong typographic hierarchy (Inter / Sans-serif)
-   - Strict color scheme: Stark Black, Crisp White, Functional Gray, Swiss Red (#E30613)
-   - Zero decorative shadows, pure functional clarity
-   ========================================================================== */
+/* ==========================================================
+   Phonological Rule Editor - スイス・スタイル (Swiss Typographic Style)
+   Design Principles:
+   - Rational Typography (Noto Sans & Noto Sans JP, JetBrains Mono)
+   - Zero Corner Radii (border-radius: 0)
+   - Zero Artificial Shadows (box-shadow: none)
+   - High Contrast Precision Layout (Pure Black & White with Swiss Red #e11d48)
+   ========================================================== */
 
 :root {
-  /* Colors */
+  --bg-page: #ffffff;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f4f4f5;
+  --bg-header: #18181b;
+  --text-header: #ffffff;
+  --bg-empty: #fcfcfc;
+
+  --border-strong: #000000;
+  --border-mid: #27272a;
+  --border-light: #d4d4d8;
+  --border-subtle: #e4e4e7;
+
+  --text-main: #09090b;
+  --text-muted: #52525b;
+  --text-dim: #71717a;
+
+  --accent-red: #e11d48;
+
+  --font-main: "Noto Sans", "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-ui: var(--font-main);
+  --font-mono: "JetBrains Mono", "Menlo", "Consolas", monospace;
+
+  /* Backward-compatible aliases */
   --swiss-white: #ffffff;
-  --swiss-bg: #f9f9fb;
+  --swiss-bg: #ffffff;
   --swiss-surface: #ffffff;
-  --swiss-surface-hover: #f3f3f6;
-  --swiss-border: #e0e0e6;
-  --swiss-border-dark: #111111;
-  
-  --swiss-black: #111111;
-  --swiss-gray-dark: #444448;
-  --swiss-gray-medium: #777780;
-  --swiss-gray-light: #aaaaaf;
-  --swiss-gray-subtle: #f0f0f4;
-  
-  /* Accent: Authentic Swiss Red */
-  --swiss-red: #E30613;
-  --swiss-red-hover: #c40510;
-  --swiss-red-light: rgba(227, 6, 19, 0.08);
-
-  /* Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Menlo', 'Consolas', monospace;
-
-  /* Layout */
-  --header-height: 56px;
-  --grid-gap: 20px;
+  --swiss-surface-hover: #f4f4f5;
+  --swiss-border: var(--border-light);
+  --swiss-border-dark: var(--border-strong);
+  --swiss-black: var(--text-main);
+  --swiss-gray-dark: var(--text-muted);
+  --swiss-gray-medium: var(--text-muted);
+  --swiss-gray-light: var(--text-dim);
+  --swiss-gray-subtle: var(--bg-subtle);
+  --swiss-red: var(--accent-red);
+  --font-sans: var(--font-main);
 }
 
+/* Reset */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-body {
-  font-family: var(--font-sans);
-  background-color: var(--swiss-bg);
-  color: var(--swiss-black);
-  line-height: 1.5;
+html {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.4;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
 }
 
-/* App Container */
+body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  background-color: var(--bg-page);
+  padding: 0 16px 40px;
+}
+
 .app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
-  border-left: 1px solid var(--swiss-border);
-  border-right: 1px solid var(--swiss-border);
-  background-color: var(--swiss-white);
 }
 
-/* Header (Structured 2-Tier Swiss Layout) */
-.swiss-header {
-  display: flex;
-  flex-direction: column;
-  background: var(--swiss-white);
-  border-bottom: 2px solid var(--swiss-black);
+/* Sticky Header Container */
+.sticky-header-container {
   position: sticky;
   top: 0;
-  z-index: 100;
-  box-sizing: border-box;
+  z-index: 1000;
+  background: var(--bg-page);
+  border-bottom: 2px solid var(--border-strong);
+  padding: 10px 0 8px;
+  margin-bottom: 16px;
 }
 
-/* Tier 1: Masthead */
-.header-masthead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
-  height: 42px;
-  border-bottom: 1px solid var(--swiss-border);
-  box-sizing: border-box;
-  background: var(--swiss-white);
-}
-
-.brand {
+.header-meta {
   display: flex;
   align-items: baseline;
-  gap: 14px;
-  white-space: nowrap;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-light);
 }
 
-.brand-title {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+.title-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.app-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   text-transform: uppercase;
-  color: var(--swiss-black);
-  line-height: 1;
+  color: var(--text-main);
 }
 
-.brand-subtitle {
-  font-size: 10.5px;
-  font-weight: 500;
-  color: var(--swiss-gray-medium);
+.app-subtitle {
+  font-size: 11px;
+  font-weight: 600;
   letter-spacing: 0.04em;
-  line-height: 1;
+  color: var(--text-muted);
+  text-transform: uppercase;
 }
 
-.masthead-util {
+.header-controls {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
-/* Swiss-Style Language Switcher (JA / EN Segment Control) */
+/* Swiss Language Switcher (JA / EN) */
 .lang-switch {
   display: inline-flex;
-  align-items: stretch;
-  border: 1px solid var(--swiss-border);
-  background: var(--swiss-white);
-  box-sizing: border-box;
-  vertical-align: middle;
-}
-
-.lang-btn {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 5px 12px;
-  background: transparent;
-  border: none;
-  color: var(--swiss-gray-medium);
-  cursor: pointer;
-  line-height: 1.2;
-  transition: background-color 0.15s ease, color 0.15s ease;
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  height: 26px;
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  overflow: hidden;
   user-select: none;
 }
 
+.lang-btn {
+  background: #ffffff;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0 10px;
+  height: 100%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.1s, color 0.1s;
+}
+
 .lang-btn:first-child {
-  border-right: 1px solid var(--swiss-border);
+  border-right: 1px solid var(--border-strong);
 }
 
 .lang-btn:hover:not(.active) {
-  color: var(--swiss-black);
-  background: var(--swiss-surface-hover);
+  color: var(--text-main);
+  background: var(--bg-subtle);
 }
 
 .lang-btn.active {
-  background: var(--swiss-black);
-  color: var(--swiss-white);
+  background: var(--text-main);
+  color: #ffffff;
   cursor: default;
 }
 
@@ -166,64 +173,56 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 24px;
-  min-height: 44px;
-  background: var(--swiss-white);
-  box-sizing: border-box;
-  gap: 16px;
+  padding: 4px 0;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
-.toolbar-left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
+.toolbar-left,
 .toolbar-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .control-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
 }
 
 .control-label {
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--swiss-gray-medium);
+  color: var(--text-muted);
 }
 
 /* Swiss Select */
 .swiss-select {
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 500;
-  padding: 6px 28px 6px 10px;
-  background-color: var(--swiss-surface);
-  border: 1px solid var(--swiss-border);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  height: 26px;
+  padding: 0 24px 0 8px;
+  background-color: #ffffff;
+  border: 1px solid var(--border-strong);
   border-radius: 0;
-  color: var(--swiss-black);
+  color: var(--text-main);
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23111111' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23000000' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 10px center;
-  transition: border-color 0.15s ease;
+  background-position: right 8px center;
+  outline: none;
 }
 
 .swiss-select:focus {
-  outline: none;
-  border-color: var(--swiss-red);
+  border-width: 2px;
+  padding-left: 7px;
 }
 
 /* Swiss Buttons */
@@ -234,43 +233,70 @@ body {
 }
 
 .swiss-btn {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 6px 12px;
-  background-color: var(--swiss-surface);
-  border: 1px solid var(--swiss-border);
-  border-radius: 0;
-  color: var(--swiss-black);
-  cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  transition: all 0.15s ease;
+  justify-content: center;
+  padding: 0 12px;
+  height: 26px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  cursor: pointer;
   user-select: none;
+  white-space: nowrap;
+  gap: 6px;
+  transition: background-color 0.1s, color 0.1s;
 }
 
 .swiss-btn:hover {
-  background-color: var(--swiss-surface-hover);
-  border-color: var(--swiss-black);
+  background: var(--text-main);
+  color: #ffffff;
 }
 
 .swiss-btn:active {
-  background-color: var(--swiss-gray-subtle);
+  background: var(--border-mid);
+  color: #ffffff;
 }
 
+.swiss-btn.btn-black,
 .swiss-btn-primary {
-  background-color: var(--swiss-black);
-  border-color: var(--swiss-black);
-  color: var(--swiss-white);
+  background: var(--text-main);
+  color: #ffffff;
+  border-color: var(--text-main);
 }
 
+.swiss-btn.btn-black:hover,
 .swiss-btn-primary:hover {
-  background-color: var(--swiss-red);
-  border-color: var(--swiss-red);
-  color: var(--swiss-white);
+  background: var(--border-mid);
+  color: #ffffff;
+}
+
+.swiss-btn.btn-help {
+  font-weight: 800;
+  padding: 0 10px;
+  background: #ffffff;
+  color: var(--text-main);
+}
+
+.mini-header-btn {
+  height: 22px;
+  padding: 0 8px;
+  font-size: 10px;
+  background: #ffffff;
+  color: var(--text-main);
+  border: 1px solid #ffffff;
+}
+
+.mini-header-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
 }
 
 .btn-svg-icon {
@@ -282,102 +308,135 @@ body {
 /* Toggle Group (Operator: → vs >) */
 .toggle-group {
   display: inline-flex;
-  border: 1px solid var(--swiss-border);
-  background: var(--swiss-white);
+  border: 1px solid var(--border-strong);
+  background: #ffffff;
+  border-radius: 0;
+  height: 26px;
+  overflow: hidden;
 }
 
 .toggle-btn {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 700;
-  padding: 5px 12px;
-  background: transparent;
-  border: none;
-  color: var(--swiss-gray-medium);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.toggle-btn:hover {
-  color: var(--swiss-black);
-  background: var(--swiss-surface-hover);
-}
-
-.toggle-btn.active {
-  background: var(--swiss-black);
-  color: var(--swiss-white);
-}
-
-/* Section Label Bar */
-.section-label-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 16px;
-  background-color: var(--swiss-gray-subtle);
-  border-bottom: 1px solid var(--swiss-border);
-}
-
-.section-tag {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--swiss-gray-dark);
-}
-
-/* Minimal Swiss Toast Notification */
-.swiss-toast {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background-color: var(--swiss-black);
-  color: var(--swiss-white);
-  padding: 10px 18px;
+  font-family: var(--font-ui);
   font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  border-left: 3px solid var(--swiss-red);
-  opacity: 0;
-  transform: translateY(10px);
-  pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  z-index: 1000;
-}
-
-.swiss-toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.swiss-btn-help {
-  font-family: var(--font-sans);
-  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 5px 14px;
-  background-color: var(--swiss-white);
-  border: 1px solid var(--swiss-border);
-  color: var(--swiss-black);
+  padding: 0 10px;
+  height: 100%;
+  background: #ffffff;
+  border: none;
+  color: var(--text-muted);
   cursor: pointer;
-  white-space: nowrap;
-  line-height: 1.2;
-  box-sizing: border-box;
+  transition: background-color 0.1s, color 0.1s;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
 }
 
-.swiss-btn-help:hover {
-  background-color: var(--swiss-surface-hover);
-  border-color: var(--swiss-black);
+.toggle-btn:hover:not(.active) {
+  color: var(--text-main);
+  background: var(--bg-subtle);
 }
 
-/* ==========================================================
-   Operating Instructions Modal (matching ipa-keyboard design)
-   ========================================================== */
+.toggle-btn.active {
+  background: var(--text-main);
+  color: #ffffff;
+}
+
+/* Status Ticker */
+.status-ticker {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 11px;
+  padding: 5px 8px;
+  margin-top: 8px;
+  background: var(--bg-subtle);
+  border-left: 3px solid var(--border-strong);
+  min-height: 24px;
+}
+
+.status-symbol {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+  min-width: 32px;
+}
+
+.status-name {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.status-desc {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+/* Swiss Section & Header */
+.swiss-section {
+  border: 1px solid var(--border-strong);
+  background: #ffffff;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.swiss-section-header {
+  background: var(--bg-header);
+  color: var(--text-header);
+  padding: 5px 10px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.swiss-section-header .sec-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.swiss-section-header .sub {
+  font-size: 9.5px;
+  font-weight: 500;
+  color: #a1a1aa;
+}
+
+/* Toast Notification (matching ipa-keyboard) */
+#toast,
+.swiss-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #3f3f46;
+  padding: 8px 20px;
+  border-radius: 0;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 10001;
+}
+
+#toast.visible,
+#toast.show,
+.swiss-toast.visible,
+.swiss-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Modal Backdrop & Box */
 .modal-backdrop,
 .modal-overlay {
   position: fixed;
@@ -405,7 +464,7 @@ body {
 
 .modal-box {
   background: #ffffff;
-  border: 2px solid var(--swiss-black);
+  border: 2px solid var(--border-strong);
   border-radius: 0;
   width: 92%;
   max-width: 620px;
@@ -420,13 +479,13 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 12px 18px;
-  border-bottom: 2px solid var(--swiss-black);
-  background: #18181b;
+  border-bottom: 2px solid var(--border-strong);
+  background: var(--bg-header);
   color: #ffffff;
 }
 
 .modal-title {
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.04em;
@@ -446,16 +505,16 @@ body {
 }
 
 .modal-close:hover {
-  color: var(--swiss-red);
+  color: var(--accent-red);
 }
 
 .modal-body {
   padding: 20px 24px;
   overflow-y: auto;
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   font-size: 13px;
   line-height: 1.65;
-  color: var(--swiss-black);
+  color: var(--text-main);
 }
 
 .modal-body h3 {
@@ -463,9 +522,9 @@ body {
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--swiss-black);
+  color: var(--text-main);
   margin: 16px 0 8px;
-  border-bottom: 1px solid var(--swiss-border);
+  border-bottom: 1px solid var(--border-light);
   padding-bottom: 4px;
 }
 
@@ -493,42 +552,42 @@ body {
   font-size: 11px;
   font-weight: 700;
   background: #f4f4f5;
-  border: 1px solid var(--swiss-black);
+  border: 1px solid var(--border-strong);
   border-radius: 0;
-  color: var(--swiss-black);
+  color: var(--text-main);
 }
 
 .modal-body code {
   font-family: var(--font-mono);
   font-size: 11.5px;
   padding: 1px 5px;
-  background: var(--swiss-gray-subtle);
-  border: 1px solid var(--swiss-border);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
   border-radius: 0;
-  color: var(--swiss-black);
+  color: var(--text-main);
 }
 
 .modal-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--swiss-black) !important;
+  color: var(--text-main) !important;
   text-decoration: none;
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
   padding: 5px 12px;
   background: #f4f4f5;
-  border: 1px solid #27272a;
+  border: 1px solid var(--border-mid);
   border-radius: 0;
   transition: background-color 0.1s ease, color 0.1s ease, border-color 0.1s ease;
 }
 
 .modal-link:hover {
-  background: var(--swiss-black);
+  background: var(--text-main);
   color: #ffffff !important;
-  border-color: var(--swiss-black);
+  border-color: var(--text-main);
 }
 
 .modal-link:hover .modal-link-icon {
@@ -543,5 +602,3 @@ body {
   display: inline-block;
   vertical-align: -1px;
 }
-
-

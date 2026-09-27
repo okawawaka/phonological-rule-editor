@@ -26,36 +26,36 @@
   <meta name="twitter:description" content="言語学における音韻規則（共時的規則）および音変化（通時的変化）の記述・可視化・画像/KaTeX出力Webエディタ。">
   <meta name="twitter:image" content="https://okawawaka.github.io/phonological-rule-editor/og-image.png">
 
-  <!-- Inter Font -->
+  <!-- スイスタイポグラフィ (Google Fonts: Noto Sans, Noto Sans JP, JetBrains Mono) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/swiss-theme.css?v=20260905_1555">
-  <link rel="stylesheet" href="css/editor.css?v=20260905_1555">
+  <link rel="stylesheet" href="css/swiss-theme.css?v=20260927_1400">
+  <link rel="stylesheet" href="css/editor.css?v=20260927_1400">
 </head>
 <body>
   <div class="app-container">
     
-    <!-- Top Bar / Structured Swiss Header -->
-    <header class="swiss-header">
+    <!-- スティッキー固定ヘッダー & 操作ツールバー -->
+    <header class="sticky-header-container">
       <!-- Tier 1: App Masthead & Global Utility -->
-      <div class="header-masthead">
-        <div class="brand">
-          <span class="brand-title" id="app-title" data-i18n="appTitle">音韻規則・音変化エディタ</span>
-          <span class="brand-subtitle" id="app-subtitle" data-i18n="appSubtitle">PHONOLOGICAL RULE EDITOR</span>
+      <div class="header-meta">
+        <div class="title-wrap">
+          <h1 class="app-title" id="app-title" data-i18n="appTitle">音韻規則・音変化エディタ</h1>
+          <span class="app-subtitle" id="app-subtitle" data-i18n="appSubtitle">PHONOLOGICAL RULE EDITOR</span>
         </div>
-        <div class="masthead-util">
+        <div class="header-controls">
           <div class="lang-switch" role="group" aria-label="Language Selector">
             <button type="button" id="lang-ja" class="lang-btn active" title="日本語 (Japanese)" onclick="if(window.app){window.app.setLanguage('ja', true);}">JA</button>
             <button type="button" id="lang-en" class="lang-btn" title="English" onclick="if(window.app){window.app.setLanguage('en', true);}">EN</button>
           </div>
-          <button type="button" id="btn-show-help" class="swiss-btn swiss-btn-help" data-i18n="helpBtn" data-i18n-title="helpBtnTitle" title="操作説明 [ ? ]">HELP [?]</button>
+          <button type="button" id="btn-show-help" class="swiss-btn btn-help" data-i18n="helpBtn" data-i18n-title="helpBtnTitle" title="ヘルプ・操作説明 (?)" aria-haspopup="dialog" aria-expanded="false" aria-controls="help-modal">HELP [ ? ]</button>
         </div>
       </div>
 
@@ -85,19 +85,19 @@
           <div class="control-group">
             <label class="control-label" data-i18n="labelExport">EXPORT</label>
             <div class="btn-group">
-              <button id="btn-copy-png" class="swiss-btn" data-i18n-title="btnCopyPngTitle" title="高解像度PNG画像をクリップボードにコピー">
+              <button type="button" id="btn-copy-png" class="swiss-btn" data-i18n-title="btnCopyPngTitle" title="高解像度PNG画像をクリップボードにコピー">
                 <svg class="btn-svg-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M3.5 10.5h-1a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v1"/></svg>
                 <span data-i18n="btnCopyPng">PNG コピー</span>
               </button>
-              <button id="btn-download-png" class="swiss-btn" data-i18n-title="btnDownloadPngTitle" title="高解像度PNG画像をダウンロード">
+              <button type="button" id="btn-download-png" class="swiss-btn" data-i18n-title="btnDownloadPngTitle" title="高解像度PNG画像をダウンロード">
                 <svg class="btn-svg-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2v8.5m0 0l-3-3m3 3l3-3M2.5 13.5h11"/></svg>
                 <span data-i18n="btnDownloadPng">PNG 保存</span>
               </button>
-              <button id="btn-download-svg" class="swiss-btn" data-i18n-title="btnDownloadSvgTitle" title="ベクターSVG画像をダウンロード">
+              <button type="button" id="btn-download-svg" class="swiss-btn" data-i18n-title="btnDownloadSvgTitle" title="ベクターSVG画像をダウンロード">
                 <svg class="btn-svg-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2v8.5m0 0l-3-3m3 3l3-3M2.5 13.5h11"/></svg>
                 <span data-i18n="btnDownloadSvg">SVG 保存</span>
               </button>
-              <button id="btn-copy-katex" class="swiss-btn swiss-btn-primary" data-i18n-title="btnCopyKatexTitle" title="LaTeX / KaTeX コードをコピー">
+              <button type="button" id="btn-copy-katex" class="swiss-btn btn-black" data-i18n-title="btnCopyKatexTitle" title="LaTeX / KaTeX コードをコピー">
                 <svg class="btn-svg-icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4l4 4-4 4m6 0h4"/></svg>
                 <span data-i18n="btnCopyKatex">KaTeX コピー</span>
               </button>
@@ -105,21 +105,25 @@
           </div>
         </div>
       </div>
+
+      <!-- ホバーステータス情報バー -->
+      <div class="status-ticker">
+        <span id="status-symbol" class="status-symbol">[ - ]</span>
+        <span id="status-name" class="status-name" data-i18n="statusDefault">素性や音素にカーソルを合わせると名称と解説が表示されます</span>
+        <span id="status-desc" class="status-desc"></span>
+      </div>
     </header>
 
     <!-- Main Workspace Grid -->
     <main class="main-stage">
       
       <!-- Section 1: Prominent Bi-directional Text Notation (Top Position) -->
-      <section class="notation-prominent-section">
-        <div class="section-label-bar">
-          <div class="label-with-badge">
-            <span class="section-tag" data-i18n="sectionTextNotation">TEXT NOTATION (BIDIRECTIONAL)</span>
-            <span class="section-badge" data-i18n="badgeRealtimeSync">リアルタイム双方向同期</span>
-          </div>
+      <section class="swiss-section notation-prominent-section">
+        <div class="swiss-section-header">
+          <span class="sec-title" data-i18n="sectionTextNotation">TEXT NOTATION (BIDIRECTIONAL) <span class="sub" data-i18n="secTextNotationSub">リアルタイム双方向同期</span></span>
           <div class="notation-actions">
             <span class="syntax-guide-pill" data-i18n="syntaxGuidePill">例: <code>[+syl] -> [+nas] / _ [+nas]</code> または <code>*p > f / # _</code></span>
-            <button id="btn-toggle-katex-code" class="mini-text-btn" data-i18n="btnToggleKatex" title="KaTeXコード表示切替">KaTeX コード表示</button>
+            <button type="button" id="btn-toggle-katex-code" class="swiss-btn mini-header-btn" data-i18n="btnToggleKatex" title="KaTeXコード表示切替">KaTeX コード表示</button>
           </div>
         </div>
 
@@ -134,7 +138,7 @@
         <div class="katex-drawer" id="katex-drawer">
           <div class="drawer-header">
             <span class="drawer-tag" data-i18n="drawerKatexTag">GENERATED KATEX / LATEX CODE</span>
-            <button id="btn-copy-katex-inline" class="mini-text-btn" data-i18n="btnCopyKatexInline" title="コードをコピー">COPY CODE</button>
+            <button type="button" id="btn-copy-katex-inline" class="swiss-btn mini-header-btn" data-i18n="btnCopyKatexInline" title="コードをコピー">COPY CODE</button>
           </div>
           <textarea id="katex-code-output" class="swiss-code-area" readonly spellcheck="false"></textarea>
         </div>
@@ -144,9 +148,9 @@
       <section class="workspace-split-grid">
         
         <!-- Left: Live Typography Display (KaTeX preview) -->
-        <div class="split-col display-col">
-          <div class="section-label-bar">
-            <span class="section-tag" data-i18n="sectionPreview">PREVIEW (LIVE)</span>
+        <div class="swiss-section split-col display-col">
+          <div class="swiss-section-header">
+            <span class="sec-title" data-i18n="sectionPreview">PREVIEW (LIVE) <span class="sub" data-i18n="secPreviewSub">リアルタイム組版レンダリング</span></span>
             <div class="preview-actions">
               <!-- Font Switch Toggle: 明朝 / ゴシック -->
               <div class="toggle-group font-toggle-group" id="font-toggle" role="group" data-i18n-aria-label="fontToggleAria" aria-label="フォント切り替え">
@@ -154,9 +158,9 @@
                 <button type="button" class="toggle-btn" data-font="sans" data-i18n="fontSans" data-i18n-title="fontSansTitle" title="ゴシック体 / サンセリフ (スライド・画面表示向け)">ゴシック</button>
               </div>
               <div class="zoom-group">
-                <button id="btn-zoom-out" class="icon-btn" data-i18n-title="zoomOutTitle" title="縮小">－</button>
-                <button id="btn-zoom-reset" class="icon-btn" data-i18n-title="zoomResetTitle" title="リセット">100%</button>
-                <button id="btn-zoom-in" class="icon-btn" data-i18n-title="zoomInTitle" title="拡大">＋</button>
+                <button type="button" id="btn-zoom-out" class="icon-btn" data-i18n-title="zoomOutTitle" title="縮小">－</button>
+                <button type="button" id="btn-zoom-reset" class="icon-btn" data-i18n-title="zoomResetTitle" title="リセット">100%</button>
+                <button type="button" id="btn-zoom-in" class="icon-btn" data-i18n-title="zoomInTitle" title="拡大">＋</button>
               </div>
             </div>
           </div>
@@ -168,9 +172,9 @@
         </div>
 
         <!-- Right: Interactive Rule Slots GUI -->
-        <div class="split-col slots-col">
-          <div class="section-label-bar">
-            <span class="section-tag" data-i18n="sectionRuleSlots">RULE SLOTS (ACTIVE: <span id="active-slot-name">A</span>)</span>
+        <div class="swiss-section split-col slots-col">
+          <div class="swiss-section-header">
+            <span class="sec-title" data-i18n="sectionRuleSlots">RULE SLOTS (ACTIVE: <span id="active-slot-name">A</span>) <span class="sub" data-i18n="secRuleSlotsSub">構造化GUIビルダークリック編集</span></span>
             <span class="slots-help-badge" data-i18n="slotsHelpBadge">直接タイピング または 下のパレットで入力</span>
           </div>
 
@@ -239,9 +243,9 @@
       </section>
 
       <!-- Section 3: Comprehensive Quick Insertion Palette & Custom Feature Maker -->
-      <section class="palette-section">
-        <div class="section-label-bar">
-          <span class="section-tag" data-i18n="sectionPalette">QUICK PALETTE (CLICK TO INSERT INTO ACTIVE SLOT)</span>
+      <section class="swiss-section palette-section">
+        <div class="swiss-section-header">
+          <span class="sec-title" data-i18n="sectionPalette">QUICK PALETTE (CLICK TO INSERT INTO ACTIVE SLOT) <span class="sub" data-i18n="secPaletteSub">記号・素性クイック挿入</span></span>
           <span class="palette-hint" data-i18n="paletteHint">ワンクリックで選択中のスロットへ即座に挿入されます</span>
         </div>
 
@@ -261,7 +265,7 @@
               <input type="text" id="custom-feature-input" class="custom-feature-input" 
                      data-i18n-placeholder="customFeaturePlaceholder"
                      placeholder="任意の素性名を入力 (例: fortis, slack vc, CG)" spellcheck="false">
-              <button type="button" id="btn-add-custom-feature" class="swiss-btn swiss-btn-primary" data-i18n="btnAddCustomFeature">+ 素性を追加</button>
+              <button type="button" id="btn-add-custom-feature" class="swiss-btn btn-black" data-i18n="btnAddCustomFeature">+ 素性を追加</button>
             </div>
             <div class="chip-container" id="chips-custom">
               <!-- Dynamically added user custom features appear here -->
@@ -470,12 +474,12 @@
   </div>
 
   <!-- App Scripts -->
-  <script src="js/i18n.js?v=20260905_1555"></script>
-  <script src="js/parser.js?v=20260905_1555"></script>
-  <script src="js/katex-generator.js?v=20260905_1555"></script>
-  <script src="js/svg-rule-renderer.js?v=20260905_1555"></script>
-  <script src="js/presets.js?v=20260905_1555"></script>
-  <script src="js/exporter.js?v=20260905_1555"></script>
-  <script src="js/app.js?v=20260905_1555"></script>
+  <script src="js/i18n.js?v=20260927_1400"></script>
+  <script src="js/parser.js?v=20260927_1400"></script>
+  <script src="js/katex-generator.js?v=20260927_1400"></script>
+  <script src="js/svg-rule-renderer.js?v=20260927_1400"></script>
+  <script src="js/presets.js?v=20260927_1400"></script>
+  <script src="js/exporter.js?v=20260927_1400"></script>
+  <script src="js/app.js?v=20260927_1400"></script>
 </body>
 </html>
